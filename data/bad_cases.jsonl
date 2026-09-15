@@ -1,0 +1,30 @@
+{"id": "bc-01", "type": "hallucinated_number", "should_flag": true, "note": "结论中的年化收益与来源不符", "claim": "本策略年化收益 45.2%，最大回撤 12.3%。", "sources": [{"id": "backtest", "text": "回测区间 2024-01-01 至 2026-08-31。策略年化收益 32.4%，最大回撤 12.3%。"}]}
+{"id": "bc-02", "type": "hallucinated_number", "should_flag": true, "note": "营收数字被放大", "claim": "2026 上半年公司营收 128.5 亿元，同比增长 22%。", "sources": [{"id": "report", "text": "2026 上半年公司营收 82.3 亿元，同比增长 22%。"}]}
+{"id": "bc-03", "type": "direction_conflict", "should_flag": true, "note": "用「提升」描述下降", "claim": "优化后单源平均耗时由 542.9 s 提升至 270.8 s。", "sources": [{"id": "perf", "text": "优化前单源平均耗时 542.9 s，优化后 270.8 s。"}]}
+{"id": "bc-04", "type": "arithmetic_error", "should_flag": true, "note": "变化率算错", "claim": "能耗由 200.0 kWh 降至 150.0 kWh，降低 50%。", "sources": [{"id": "energy", "text": "改造前能耗 200.0 kWh，改造后 150.0 kWh。"}]}
+{"id": "bc-05", "type": "transcription_error", "should_flag": true, "note": "数字抄错一位", "claim": "系统平均响应耗时 542.7 s。", "sources": [{"id": "perf", "text": "系统平均响应耗时 542.9 s。"}]}
+{"id": "bc-06", "type": "unsourced_metric", "should_flag": true, "note": "风险指标来源中没有", "claim": "该策略夏普比率 2.31，信息比率 1.85。", "sources": [{"id": "backtest", "text": "回测显示策略年化收益 32.4%，最大回撤 12.3%。"}]}
+{"id": "bc-07", "type": "extrapolation", "should_flag": true, "note": "数字对得上，但把样本内结论外推到未来", "claim": "该因子体系长期有效，明年将继续保持 32.4% 的收益。", "sources": [{"id": "backtest", "text": "样本内回测年化收益 32.4%。"}, {"id": "method", "text": "本回测为样本内检验，未做样本外验证，结论不可外推至未来收益。"}]}
+{"id": "bc-08", "type": "semantic_mismatch", "should_flag": true, "note": "数字是营收，结论当成利润", "claim": "公司利润 82.3 亿元，盈利质量良好。", "sources": [{"id": "report", "text": "公司本年度营业收入 82.3 亿元。"}]}
+{"id": "bc-09", "type": "arithmetic_error", "should_flag": true, "note": "相对提升算错（40%→80% 实际提升 100%，文中写 30%）", "claim": "命中率由 40% 提升到 80%，提升了 30%。", "sources": [{"id": "eval", "text": "优化前命中率 40%，优化后 80%。"}]}
+{"id": "bc-10", "type": "absolute_claim", "should_flag": true, "note": "绝对化断言，来源只支持部分场景", "claim": "该模型在所有测试场景下必然优于基线。", "sources": [{"id": "eval", "text": "在 12 个测试场景中，该模型优于基线 9 次。"}]}
+{"id": "bc-11", "type": "hallucinated_pct", "should_flag": true, "note": "可用性被抬高", "claim": "系统可用性达到 99.99%。", "sources": [{"id": "sla", "text": "过去一年系统可用性 99.9%。"}]}
+{"id": "bc-12", "type": "semantic_mismatch", "should_flag": true, "note": "错误率上升却称效果显著", "claim": "错误率由 3.2% 提升至 8.7%，效果显著。", "sources": [{"id": "qa", "text": "改造前错误率 3.2%，改造后 8.7%。"}]}
+{"id": "bc-13", "type": "hallucinated_number", "should_flag": true, "note": "样本量被夸大", "claim": "该策略在 1,250 个交易日中胜率 68%。", "sources": [{"id": "backtest", "text": "回测样本共 214 个交易日，胜率 61%。"}]}
+{"id": "bc-14", "type": "transcription_error", "should_flag": true, "note": "末位抄错", "claim": "平均清除时间 271.0 s。", "sources": [{"id": "sim", "text": "120 局仿真平均清除时间 270.8 s。"}]}
+{"id": "bc-15", "type": "hallucinated_number", "should_flag": true, "note": "单位量级被放大十倍", "claim": "模型参数量 7,200 亿。", "sources": [{"id": "model", "text": "模型参数量 720 亿。"}]}
+{"id": "bc-16", "type": "contradiction_with_source", "should_flag": true, "note": "与来源结论直接相反", "claim": "报告指出该因子在 2025 年二季度表现最佳。", "sources": [{"id": "report", "text": "报告指出该因子在 2025 年二季度出现明显失效，区间最大回撤 21.7%。"}]}
+{"id": "bc-17", "type": "hallucinated_pct", "should_flag": true, "note": "覆盖率无出处", "claim": "该方案对目标区域的覆盖率 97.5%。", "sources": [{"id": "sim", "text": "方案在 120 局仿真中均实现 100% 清除。"}]}
+{"id": "bc-18", "type": "unsourced_metric", "should_flag": true, "note": "回撤数字无出处", "claim": "区间最大回撤控制在 8.4% 以内。", "sources": [{"id": "backtest", "text": "回测显示策略年化收益 32.4%，最大回撤 12.3%。"}]}
+{"id": "bc-19", "type": "direction_conflict", "should_flag": true, "note": "用「下降」描述上升", "claim": "资金周转率由 8.2 次下降至 12.5 次。", "sources": [{"id": "fin", "text": "期初资金周转率 8.2 次，期末 12.5 次。"}]}
+{"id": "bc-20", "type": "hallucinated_number", "should_flag": true, "note": "异常条数被改写", "claim": "系统自动检出 318 条监控异常。", "sources": [{"id": "flywheel", "text": "真实运行中自动检出 139 条监控异常，聚类为 9 类错误模式。"}]}
+{"id": "gc-01", "type": "clean", "should_flag": false, "note": "数字全部可溯源", "claim": "回测显示策略年化收益 32.4%，最大回撤 12.3%。", "sources": [{"id": "backtest", "text": "回测区间 2024-01-01 至 2026-08-31。策略年化收益 32.4%，最大回撤 12.3%。"}]}
+{"id": "gc-02", "type": "clean", "should_flag": false, "note": "多数字全部对得上", "claim": "系统在 200 局演练中平均耗时 270.8 s，理论下界约 229 s。", "sources": [{"id": "sim", "text": "200 局演练平均定位清除时间 270.8 s，该框架下理论下界约 229 s。"}]}
+{"id": "gc-03", "type": "clean", "should_flag": false, "note": "含因果词但数字全部有出处", "claim": "由于评分体系引入行业自适应阈值，准确率提升至 78.5%。", "sources": [{"id": "eval", "text": "引入行业自适应阈值后，评分准确率提升至 78.5%。"}]}
+{"id": "gc-04", "type": "clean", "should_flag": false, "note": "变化率计算正确", "claim": "能耗由 200.0 kWh 降至 150.0 kWh，降低 25%。", "sources": [{"id": "energy", "text": "改造前能耗 200.0 kWh，改造后 150.0 kWh。"}]}
+{"id": "gc-05", "type": "clean", "should_flag": false, "note": "区间表述方向正确", "claim": "覆盖率由 62% 提升至 95%。", "sources": [{"id": "sim", "text": "优化前覆盖率 62%，优化后 95%。"}]}
+{"id": "gc-06", "type": "clean", "should_flag": false, "note": "百分比正确溯源", "claim": "该因子在样本内解释度达到 41.2%。", "sources": [{"id": "factor", "text": "样本内回归显示该因子解释度 41.2%。"}]}
+{"id": "gc-07", "type": "clean", "should_flag": false, "note": "计数类小整数应被跳过", "claim": "该流程共 3 个环节，第 2 个环节负责数据核验。", "sources": [{"id": "doc", "text": "流程分为三个环节，其中第二个环节负责数据核验。"}]}
+{"id": "gc-08", "type": "clean", "should_flag": false, "note": "含日期，日期不应被当作数字断言", "claim": "该方法于 2026 年 8 月完成验证。", "sources": [{"id": "log", "text": "验证工作于 2026 年 8 月完成。"}]}
+{"id": "gc-09", "type": "clean", "should_flag": false, "note": "英文案例，数字全部可溯源", "claim": "The strategy achieved 32.4% annualized return with 12.3% max drawdown.", "sources": [{"id": "backtest", "text": "Annualized return 32.4%; maximum drawdown 12.3%."}]}
+{"id": "gc-10", "type": "clean", "should_flag": false, "note": "含外推措辞但数字全部有出处，规则层只标注不判罪", "claim": "基于现有回测结果，下一阶段将把阈值扩展至 21 个行业。", "sources": [{"id": "plan", "text": "下一阶段计划把自适应阈值扩展至 21 个行业。"}]}
