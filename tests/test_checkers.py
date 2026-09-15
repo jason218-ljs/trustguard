@@ -99,13 +99,23 @@ class TestAssumptionChecker:
         result = AssumptionChecker().check("系统运行稳定。", [])
         assert result.stats["signals_total"] == 0
 
-    def test_llm_layer_raises_real_issue(self):
+    def test_llm_layer_is_advisory_only(self):
+        """假设维度只作标注，不参与判定 —— 即使模型自评为 error 也不拉低判定。
+
+        依据（实测）：语义类缺陷由 provenance / contradiction 命中，
+        本检查器对召回贡献为 0，而干净样本的误报全部来自本检查器。
+        """
         llm = ScriptedLLM(
             ['{"assumptions": [{"assumption": "样本内结论可外推", '
             '"why": "来源明确写了不可外推", "severity": "error"}]}']
         )
         result = AssumptionChecker(llm).check("预计明年收益 40%。", [])
-        assert result.status == Verdict.FAIL
+        assert result.status == Verdict.PASS, "假设项不应影响判定"
+        llm_issues = [i for i in result.issues if i.detail.get("source") == "llm"]
+        assert len(llm_issues) == 1
+        assert llm_issues[0].severity == Severity.INFO
+        # 模型自评的严重程度仍保留，供人工参考
+        assert llm_issues[0].detail["raw_severity"] == "error"
 
     def test_llm_empty_result(self):
         llm = ScriptedLLM(['{"assumptions": []}'])

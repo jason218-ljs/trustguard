@@ -59,7 +59,7 @@ _LLM_PROMPT = """你是一个论证审查员。请找出下面这段结论所依
 3. 每条给出：假设内容、为什么它是未言明的、严重程度。
 
 只输出 JSON：
-{{"assumptions": [{{"assumption": "假设内容", "why": "为什么未言明且重要", "severity": "warn|error"}}]}}
+{{"assumptions": [{{"assumption": "假设内容", "why": "为什么未言明且重要", "severity": "info|warn|error"}}]}}
 若没有实质假设，输出 {{"assumptions": []}}。"""
 
 
@@ -94,7 +94,7 @@ class AssumptionChecker(BaseChecker):
         result.stats = {
             **{f"signal_{k}": v for k, v in counts.items()},
             "signals_total": sum(counts.values()),
-            "rule_layer_note": "规则层仅标注疑似假设，实质判定需 LLM 或人工",
+            "note": "本项仅作提示、不参与判定：未言明的假设没有天然的判定标准，实测中本项对召回无贡献而全部误报均来自本项",
         }
 
         if self.llm_enabled:
@@ -122,13 +122,21 @@ class AssumptionChecker(BaseChecker):
 
         items = payload.get("assumptions", []) if isinstance(payload, dict) else []
         for item in items:
-            severity = Severity.ERROR if item.get("severity") == "error" else Severity.WARN
+            # 假设维度**只作标注，不参与判定** —— 这是基于实测的架构决定：
+            #   1. 「找出未言明的假设」没有天然的停止条件：任何结论都依赖无穷多隐含前提，
+            #      模型总会列出若干条，且对"是否构成缺陷"的自我评定未经校准。
+            #   2. 实测（hybrid 模式，30 条标注集）显示：语义类缺陷由 provenance 与
+            #      contradiction 两个检查器双双命中，本检查器对召回**贡献为 0**；
+            #      而 10 条干净样本中的误报**全部**来自本检查器。
+            #   3. 因此按「零召回增量 + 全额误报来源」的证据，本项退化为人工复核提示。
+            # 模型自评的严重程度仍保留在 detail 中，供人工参考。
+            raw = str(item.get("severity", "warn")).strip().lower() or "warn"
             result.issues.append(
                 Issue(
                     check=self.name,
-                    severity=severity,
+                    severity=Severity.INFO,
                     message=f"未言明的假设：{item.get('assumption', '')}".strip(),
                     evidence=str(item.get("why", "")),
-                    detail={"source": "llm"},
+                    detail={"source": "llm", "raw_severity": raw},
                 )
             )
