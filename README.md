@@ -4,7 +4,7 @@
 >
 > **数据溯源** → **假设识别** → **逻辑反向推演**
 
-`Python` · 零运行时依赖 · 95 个单元测试 · 30 条标注数据集 · **纯规则模式即可离线运行，无需任何 API key**
+`Python` · 零运行时依赖 · 97 个单元测试 · 30 条标注数据集 · **纯规则模式即可离线运行，无需任何 API key**
 
 ---
 
@@ -121,7 +121,7 @@ git clone https://github.com/jason218-ljs/trustguard.git
 cd trustguard
 pip install -e ".[dev]"
 
-pytest                                   # 95 个测试，全部离线可跑
+pytest                                   # 97 个测试，全部离线可跑
 python eval/run_eval.py                  # 复现上表指标
 trustguard demo                          # 看一个完整示例
 ```
@@ -227,11 +227,11 @@ trustguard check --claim @"..." --source @"..." --mode auto
 │       └── arithmetic.py      #   附、算术一致性
 ├── data/bad_cases.jsonl       # 30 条标注数据集（11 种缺陷类型）
 ├── eval/run_eval.py           # 评估脚本（混淆矩阵 + 分类别命中率）
-├── tests/                     # 95 个单元测试
+├── tests/                     # 97 个单元测试
 └── .github/workflows/ci.yml   # CI：测试 + 评估
 ```
 
-代码约 **1,735 行**（`src/`），测试约 **542 行**。
+代码约 **1,782 行**（`src/`），测试约 **559 行**。
 
 ---
 
@@ -266,6 +266,6 @@ trustguard check --claim @"..." --source @"..." --mode auto
 
 **Measured on a hand-labelled dataset of 30 cases (20 defective + 10 clean), pure-rule mode achieves 75.0% recall at 0.0% false-positive rate (100% precision, F1 85.7%).** Every defect category that is *exactly decidable* is caught at 100%; all five misses fall in categories that require semantic understanding — which is precisely where the LLM layer is meant to help. The project therefore not only catches errors, it **quantifies the boundary between what code should do and what models should do**.
 
-Zero runtime dependencies, 95 unit tests, fully reproducible offline: `pytest && python eval/run_eval.py`.
+Zero runtime dependencies, 97 unit tests, fully reproducible offline: `pytest && python eval/run_eval.py`.
 
 MIT licensed. Built independently; the dataset is synthetic and contains no real enterprise or personal data.

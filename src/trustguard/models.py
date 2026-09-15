@@ -160,7 +160,22 @@ class Report:
 
     @property
     def all_issues(self) -> List[Issue]:
+        """全部条目，含 INFO 级标注项。"""
         return [i for r in self.results for i in r.issues]
+
+    @property
+    def all_problems(self) -> List[Issue]:
+        """WARN / ERROR 级问题——真正影响采纳的条目。"""
+        return [i for i in self.all_issues if i.severity != Severity.INFO]
+
+    @property
+    def all_notes(self) -> List[Issue]:
+        """INFO 级标注项——不构成问题，仅供人工参考。
+
+        与 `all_problems` 分开统计，避免「判定 PASS（未发现问题）」
+        与「问题总数：1」这类自相矛盾的报告。
+        """
+        return [i for i in self.all_issues if i.severity == Severity.INFO]
 
     def find(self, check: CheckName) -> Optional[CheckResult]:
         for r in self.results:

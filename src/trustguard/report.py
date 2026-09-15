@@ -48,7 +48,16 @@ def to_markdown(report: Report) -> str:
     )
     lines.append(f"- 来源材料：{len(report.sources)} 份"
                  + (f"（{', '.join(report.sources)}）" if report.sources else ""))
-    lines.append(f"- 问题总数：{len(report.all_issues)}")
+    problems = report.all_problems
+    notes = report.all_notes
+    detail = ""
+    if problems:
+        n_err = sum(1 for i in problems if i.severity == Severity.ERROR)
+        n_warn = sum(1 for i in problems if i.severity == Severity.WARN)
+        detail = f"（error {n_err} / warn {n_warn}）"
+    lines.append(f"- 问题总数：{len(problems)}{detail}")
+    if notes:
+        lines.append(f"- 标注项：{len(notes)}（不构成问题，仅供人工参考）")
     lines.append("")
 
     lines.append("## 待审结论")

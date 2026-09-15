@@ -50,6 +50,23 @@ class TestPipeline:
         )
         assert len(reports) == 2
 
+    def test_notes_are_not_counted_as_problems(self):
+        """回归：INFO 级标注项不得计入「问题总数」。
+
+        否则会出现「判定 PASS（未发现问题）」与「问题总数：1」自相矛盾的报告。
+        """
+        report = TrustGuard().check("收益 32.4%。", [Source(id="s", text="收益 32.4%。")])
+        assert report.verdict == Verdict.PASS
+        assert report.all_notes, "本例应至少产生一条 INFO 级标注项"
+        assert report.all_problems == []
+
+    def test_all_problems_excludes_info_only(self):
+        """all_problems 只保留 WARN / ERROR，all_issues 仍包含全部条目。"""
+        report = TrustGuard().check("收益 45.2%。", [Source(id="s", text="收益 32.4%。")])
+        assert report.all_problems
+        assert all(i.severity != Severity.INFO for i in report.all_problems)
+        assert len(report.all_issues) == len(report.all_problems) + len(report.all_notes)
+
 
 class TestNormalizeSources:
     def test_source_objects(self):
