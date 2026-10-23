@@ -118,7 +118,7 @@ class OpenAICompatLLM:
             import requests
         except ImportError as exc:  # pragma: no cover
             raise LLMError(
-                "使用真实 LLM 需要安装 requests：pip install 'trustguard[llm]'"
+                "使用真实 LLM 需要安装 requests：pip install 'trustguard-ai[llm]'"
             ) from exc
 
         messages: List[Dict[str, str]] = []

@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrustGuard · 检查 AI 结论里哪个数字是编的</title>
+<style>
+  :root{
+    --ink:#0f2033; --ink-2:#42586f; --ink-3:#7a8ea4;
+    --line:#e2e9f1; --line-2:#eff3f8;
+    --bg:#ffffff; --bg-2:#f7f9fc;
+    --blue:#0f3355; --blue-2:#1d5c92; --blue-3:#eaf2fa;
+    --warn:#9a6b00; --warn-bg:#fdf6e7;
+    --red:#a8342a; --red-bg:#fdf1ef;
+    --green:#1c6b4d; --green-bg:#edf7f1;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--bg);color:var(--ink);font-family:"PingFang SC","Hiragino Sans GB","Microsoft YaHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:16px;line-height:1.8;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:900px;margin:0 auto;padding:0 28px}
+
+  /* hero */
+  .hero{padding:84px 0 60px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,#fbfdff 0%,#fff 100%)}
+  .badge{display:inline-block;font-size:11.5px;letter-spacing:.14em;color:var(--blue-2);font-weight:700;border:1px solid #cfe0ef;background:#f4f9fe;padding:4px 11px;border-radius:100px;margin-bottom:22px}
+  h1{font-size:42px;line-height:1.3;font-weight:700;letter-spacing:-.02em;color:var(--blue);margin-bottom:16px}
+  h1 .thin{color:var(--ink-3);font-weight:400}
+  .lede{font-size:18px;color:var(--ink-2);max-width:640px;line-height:1.75}
+  .install{margin-top:32px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .cmd{font-family:"SF Mono",Consolas,Monaco,monospace;font-size:14px;background:var(--blue);color:#e8f2fb;padding:12px 20px;border-radius:5px}
+  .cmd .p{color:#7fb3d9;user-select:none}
+  .meta-line{margin-top:20px;font-size:13px;color:var(--ink-3)}
+  .meta-line b{color:var(--ink-2);font-weight:600}
+
+  section{padding:64px 0;border-bottom:1px solid var(--line)}
+  section:last-of-type{border-bottom:none}
+  h2{font-size:13px;letter-spacing:.16em;color:var(--blue-2);font-weight:700;margin-bottom:8px}
+  .h2sub{font-size:26px;font-weight:700;color:var(--blue);letter-spacing:-.01em;margin-bottom:14px;line-height:1.4}
+  p{margin-bottom:14px;color:var(--ink-2)}
+  strong{color:var(--ink);font-weight:700}
+  em{font-style:normal;background:linear-gradient(180deg,transparent 62%,#dbe9f8 62%);padding:0 2px;font-weight:600;color:var(--ink)}
+
+  /* demo */
+  .demo{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:28px 0}
+  .pane{padding:24px 26px}
+  .pane.in{background:var(--bg-2);border-right:1px solid var(--line)}
+  .pane.out{background:#fff}
+  .pane h3{font-size:11.5px;letter-spacing:.12em;color:var(--ink-3);font-weight:700;margin-bottom:14px;text-transform:uppercase}
+  .claim{background:#fff;border:1px solid var(--line);border-radius:4px;padding:14px 16px;font-size:13.5px;line-height:1.85;color:var(--ink);margin-bottom:12px}
+  .src{font-size:12.5px;color:var(--ink-2);line-height:1.8;margin-bottom:8px;padding-left:12px;border-left:2px solid #d9e4ef}
+  .src b{color:var(--ink);font-weight:600}
+  .verdict-line{display:flex;align-items:center;gap:9px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line-2)}
+  .pill{font-size:11.5px;font-weight:700;padding:3px 10px;border-radius:100px}
+  .pill.warn{background:var(--warn-bg);color:var(--warn);border:1px solid #ecd9a8}
+  .pill.err{background:var(--red-bg);color:var(--red);border:1px solid #e8c4bf}
+  .pill.pass{background:var(--green-bg);color:var(--green);border:1px solid #bfdccd}
+  .finding{font-size:13.5px;line-height:1.8;margin-bottom:12px;padding:10px 14px;background:var(--warn-bg);border-left:3px solid #d9a520;border-radius:0 4px 4px 0}
+  .finding b{color:#6b4a00}
+  .finding code{font-family:"SF Mono",Consolas,monospace;font-size:12px;background:#fff8e8;padding:1px 5px;border-radius:3px;color:#6b4a00}
+  .note{font-size:12.5px;color:var(--ink-3);line-height:1.8;padding:8px 0 0 12px;border-left:2px solid var(--line)}
+
+  /* why */
+  .why{background:var(--blue-3);border-left:4px solid var(--blue-2);padding:24px 28px;margin:26px 0}
+  .why p{color:#16364f;margin-bottom:10px}
+  .why p:last-child{margin-bottom:0}
+
+  /* table */
+  table{width:100%;border-collapse:collapse;font-size:14px;margin:22px 0 12px}
+  th{text-align:left;background:var(--blue);color:#fff;font-weight:600;padding:12px 14px;font-size:12.5px}
+  td{padding:12px 14px;border-bottom:1px solid var(--line-2);color:var(--ink-2)}
+  tr:nth-child(even) td{background:#fafcfe}
+  td b{color:var(--ink)}
+  .hl td{background:#eef6fd !important}
+  .hl td b{color:var(--blue-2)}
+
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:26px 0}
+  .card{border:1px solid var(--line);padding:20px 18px;border-radius:5px}
+  .card .n{font-size:26px;font-weight:700;color:var(--blue);line-height:1.2;margin-bottom:6px;font-variant-numeric:tabular-nums}
+  .card .l{font-size:12.5px;color:var(--ink-3);line-height:1.6}
+
+  .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:26px}
+  .btn{display:inline-block;padding:12px 22px;border-radius:5px;font-size:14px;font-weight:600;text-decoration:none;transition:opacity .15s}
+  .btn.pri{background:var(--blue);color:#fff}
+  .btn.sec{border:1px solid var(--line);color:var(--ink-2);background:#fff}
+  .btn:hover{opacity:.85}
+
+  footer{padding:44px 0 64px;font-size:12.5px;color:var(--ink-3);line-height:1.9}
+  footer b{color:var(--ink-2)}
+
+  @media (max-width:760px){
+    h1{font-size:30px}
+    .lede{font-size:16px}
+    .demo{grid-template-columns:1fr}
+    .pane.in{border-right:none;border-bottom:1px solid var(--line)}
+    .cards{grid-template-columns:1fr}
+    section{padding:44px 0}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="badge">OPEN SOURCE · MIT</div>
+    <h1>AI 结论里<br><span class="thin">哪个数字是编的</span></h1>
+    <p class="lede">把「一段结论」和「它引用的原始材料」一起喂进去，TrustGuard 逐条指出<strong>哪个数字在材料里找不到出处、哪句话和来源矛盾、哪个变化率算错了</strong>——每条都带证据原文，可以直接拿去核对。纯规则模式零依赖、零 API key、离线可跑。</p>
+    <div class="install">
+      <div class="cmd"><span class="p">$ </span>pip install trustguard-ai</div>
+      <div class="cmd"><span class="p">$ </span>tguard demo</div>
+    </div>
+    <div class="meta-line"><b>97</b> 个单元测试 ｜ <b>30</b> 条标注样本 ｜ 纯规则 <b>75%</b> 召回 / <b>0%</b> 误报 ｜ hybrid <b>F1 97.6%</b></div>
+  </div>
+</div>
+
+<section>
+  <div class="wrap">
+    <h2>看一个真实例子</h2>
+    <div class="h2sub">左边是一段看起来很专业的 AI 结论，右边是它的问题</div>
+    <p>这是一份量化策略报告里的一段话。数字齐全、逻辑通顺、措辞专业——它完全可能被直接贴进给客户的邮件里。</p>
+
+    <div class="demo">
+      <div class="pane in">
+        <h3>输入</h3>
+        <div class="claim">本季度组合取得显著超额收益：AlphaForge 系统选出的标的组合年化收益 <b>32.4%</b>，显著高于基准 <b>8.1%</b>，说明该因子体系在 A 股市场长期有效，预计明年收益可达 <b>40%</b> 以上。</div>
+        <div class="src"><b>来源 [backtest-report]</b>：回测显示，组合年化收益 32.4%，同期基准年化收益 8.1%，超额收益 24.3 个百分点。</div>
+        <div class="src"><b>来源 [methodology]</b>：因子有效性检验采用 IC 与分层回测，样本区间 2018–2025。</div>
+      </div>
+      <div class="pane out">
+        <h3>输出</h3>
+        <div class="verdict-line">
+          <span class="pill warn">⚠ WARN</span>
+          <span style="font-size:12.5px;color:var(--ink-3)">mode=rule · 1 个问题 · 3 条标注</span>
+        </div>
+        <div class="finding">
+          <b>数字 40% 在来源材料中找不到出处</b><br>
+          证据：<code>有效，预计明年收益可达 40% 以上。</code>
+        </div>
+        <div class="note">
+          ℹ️ 标注：此处可能存在外推假设（以过去推未来）——「预计」<br>
+          ℹ️ 标注：此处可能存在因果假设——「说明」<br>
+          <span style="display:block;margin-top:6px">标注项不参与判定，仅供人工复核。</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="why">
+      <p><strong>为什么 32.4% 通过了，40% 被拦下？</strong></p>
+      <p>32.4% 和 8.1% 都能在来源里逐字找到。40% 不能——它是「预计」，但没有任何材料支持这个数字。</p>
+      <p>工具不判断「这个预测对不对」，那不是它能做的。它只回答一个可判定的事实：<em>这个数字有没有依据</em>。而这恰恰是人在复核时最容易跳过、后果最严重的一步。</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>实测</h2>
+    <div class="h2sub">最值得看的不是最好的那行，是中间那行</div>
+    <p>30 条人工标注样本（20 条含缺陷 + 10 条干净），11 种缺陷类型。</p>
+
+    <table>
+      <thead><tr><th>配置</th><th>召回</th><th>误报</th><th>精确率</th><th>F1</th></tr></thead>
+      <tbody>
+        <tr><td><b>纯规则</b>（无需 API key）</td><td>75.0%</td><td><b>0.0%</b></td><td><b>100%</b></td><td>85.7%</td></tr>
+        <tr class="hl"><td><b>hybrid · 朴素接入 LLM</b></td><td><b>100%</b></td><td>60.0%</td><td>76.9%</td><td>87.0%</td></tr>
+        <tr><td><b>hybrid · 校准后</b></td><td><b>100%</b></td><td>10.0%</td><td>95.2%</td><td><b>97.6%</b></td></tr>
+      </tbody>
+    </table>
+
+    <p>中间那行是关键：<strong>把 LLM 朴素地接进每个检查器，召回从 75% 涨到 100%，但误报从 0% 涨到 60%，F1 只从 85.7% 挪到 87.0%</strong>——多花的 token 没有换来净收益，只是把「漏报」换成了「误报」。</p>
+    <p>逐条归因后发现，全部效果来自一个维度：<em>未言明的假设</em>。它对召回的贡献是 0（另外两个检查器已经抓到了所有语义缺陷），却贡献了全部误报。于是按实测证据把这一维度降级为「只提示、不判定」——这是被数据逼出来的设计，不是偏好。</p>
+
+    <div class="cards">
+      <div class="card"><div class="n">0.0%</div><div class="l">纯规则模式的误报率<br>所有可精确判定的缺陷 100% 命中</div></div>
+      <div class="card"><div class="n">5 类</div><div class="l">只有 LLM 能补上的语义缺陷<br>校准后全部命中</div></div>
+      <div class="card"><div class="n">1 条</div><div class="l">剩余误报，很可能是标注错了<br>已在 README 里公开说明</div></div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <h2>设计主张</h2>
+    <div class="h2sub">刚性任务交给代码，柔性任务交给模型，有些事根本不该自动判</div>
+    <p>数值比对、算术校验、方向矛盾、近似笔误——这些<strong>可以被精确判定</strong>，所以用纯规则：零误报、可解释、可复现、不需要 API key。</p>
+    <p>语义错位、隐藏假设、与来源的实质冲突——这些<strong>需要理解语义</strong>，所以交给模型，但由确定性层兜底校验它的输入。</p>
+    <p>至于「找出未言明的假设」——它<strong>没有天然的停止条件</strong>（任何结论都依赖无穷多隐含前提），模型的自我评定也未经校准。所以它只提示，不判罪。</p>
+
+    <div class="cta">
+      <a class="btn pri" href="https://github.com/jason218-ljs/trustguard">GitHub 仓库</a>
+      <a class="btn sec" href="https://github.com/jason218-ljs/trustguard#readme">完整文档</a>
+      <a class="btn sec" href="https://pypi.org/project/trustguard-ai/">PyPI</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <b>声明</b>：数据集为人工构造的合成样本，不含任何真实企业数据或个人数据。工具输出仅作为人工复核的提示，不构成对结论正确性的最终判定，不构成投资建议。<br>
+    MIT License · 独立完成的个人开源项目
+  </div>
+</footer>
+
+</body>
+</html>

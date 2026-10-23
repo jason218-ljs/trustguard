@@ -3,14 +3,14 @@ from __future__ import annotations
 
 import pytest
 
-from trustguard.checkers import (
+from trustguard_ai.checkers import (
     ArithmeticChecker,
     AssumptionChecker,
     ContradictionChecker,
     ProvenanceChecker,
 )
-from trustguard.llm import ScriptedLLM
-from trustguard.models import CheckName, Severity, Source, Verdict
+from trustguard_ai.llm import ScriptedLLM
+from trustguard_ai.models import CheckName, Severity, Source, Verdict
 
 
 @pytest.fixture

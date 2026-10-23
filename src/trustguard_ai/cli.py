@@ -1,8 +1,8 @@
 """命令行入口。
 
-    trustguard check --claim "..." --source a.txt --source b.txt
-    trustguard check --claim @claim.md --source @data.txt --json
-    trustguard demo
+    tguard check --claim "..." --source a.txt --source b.txt
+    tguard check --claim @claim.md --source @data.txt --json
+    tguard demo
 
 退出码：
     0  判定未达到 --fail-on 阈值
@@ -111,7 +111,7 @@ def _cmd_demo(args: argparse.Namespace) -> int:
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        prog="trustguard",
+        prog="tguard",
         description="LLM Agent 输出的可信性检查器——三重质疑：数据溯源 / 假设识别 / 逻辑反向推演",
     )
     sub = parser.add_subparsers(dest="command")

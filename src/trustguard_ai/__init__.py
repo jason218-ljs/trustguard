@@ -7,7 +7,7 @@
     三、逻辑反向推演  从结论倒推，会不会推出矛盾？
 
 快速开始：
-    >>> from trustguard import TrustGuard, Source
+    >>> from trustguard_ai import TrustGuard, Source
     >>> guard = TrustGuard()                      # 纯规则，离线可用，无需 API key
     >>> report = guard.check(
     ...     "组合年化收益 32.4%，预计明年可达 40%。",

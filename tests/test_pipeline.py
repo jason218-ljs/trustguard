@@ -5,11 +5,11 @@ import json
 
 import pytest
 
-from trustguard import Source, TrustGuard, build_guard, normalize_sources
-from trustguard.cli import main as cli_main
-from trustguard.llm import LLMError, OpenAICompatLLM, ScriptedLLM, extract_json
-from trustguard.models import CheckName, Severity, Verdict
-from trustguard.report import to_json, to_markdown, to_summary_line
+from trustguard_ai import Source, TrustGuard, build_guard, normalize_sources
+from trustguard_ai.cli import main as cli_main
+from trustguard_ai.llm import LLMError, OpenAICompatLLM, ScriptedLLM, extract_json
+from trustguard_ai.models import CheckName, Severity, Verdict
+from trustguard_ai.report import to_json, to_markdown, to_summary_line
 
 
 class TestPipeline:

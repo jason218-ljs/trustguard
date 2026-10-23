@@ -15,8 +15,8 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "src"))
 
-from trustguard import Source, TrustGuard  # noqa: E402
-from trustguard.report import to_markdown  # noqa: E402
+from trustguard_ai import Source, TrustGuard  # noqa: E402
+from trustguard_ai.report import to_markdown  # noqa: E402
 
 # ---------------------------------------------------------------- 场景数据
 

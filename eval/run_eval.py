@@ -27,8 +27,8 @@ from typing import Dict, List, Optional, Tuple
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "src"))
 
-from trustguard import Source, TrustGuard, build_guard  # noqa: E402
-from trustguard.models import Verdict  # noqa: E402
+from trustguard_ai import Source, TrustGuard, build_guard  # noqa: E402
+from trustguard_ai.models import Verdict  # noqa: E402
 
 DEFAULT_CASES = ROOT / "data" / "bad_cases.jsonl"
 

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import pytest
 
-from trustguard.extract import (
+from trustguard_ai.extract import (
     arithmetic_stats,
     change_rate_issues,
     derivable_percentages,
@@ -12,7 +12,7 @@ from trustguard.extract import (
     is_checkable,
     numbers_equal,
 )
-from trustguard.models import Source, Severity
+from trustguard_ai.models import Source, Severity
 
 
 class TestExtractNumbers:

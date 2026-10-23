@@ -1,18 +1,39 @@
 [build-system]
-requires = ["setuptools>=61.0"]
+requires = ["setuptools>=77.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "trustguard"
-version = "0.1.0"
+name = "trustguard-ai"
+version = "0.1.1"
 description = "Trustworthiness guard for LLM agent outputs — a triple-challenge checker (provenance / assumption / contradiction)"
 readme = "README.md"
 requires-python = ">=3.9"
-license = { text = "MIT" }
+license = "MIT"
+license-files = ["LICENSE"]
 authors = [{ name = "Junsen Li" }]
-keywords = ["llm", "agent", "trustworthy-ai", "hallucination", "evaluation"]
+keywords = ["llm", "agent", "trustworthy-ai", "hallucination", "evaluation", "guardrails", "factuality", "provenance"]
 
 dependencies = []
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Quality Assurance",
+]
+
+[project.urls]
+Homepage = "https://github.com/jason218-ljs/trustguard"
+Repository = "https://github.com/jason218-ljs/trustguard"
+Issues = "https://github.com/jason218-ljs/trustguard/issues"
+Changelog = "https://github.com/jason218-ljs/trustguard/commits/main"
 
 [project.optional-dependencies]
 # 真实 LLM 接入（OpenAI 兼容接口：百炼 / DeepSeek / Ollama / vLLM 均可）
@@ -20,7 +41,7 @@ llm = ["requests>=2.28.0"]
 dev = ["pytest>=7.0.0", "pytest-cov>=4.0.0"]
 
 [project.scripts]
-trustguard = "trustguard.cli:main"
+tguard = "trustguard_ai.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -31,4 +52,4 @@ pythonpath = ["src"]
 addopts = "-q"
 
 [tool.coverage.run]
-source = ["src/trustguard"]
+source = ["src/trustguard_ai"]
